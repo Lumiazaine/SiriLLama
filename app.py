@@ -37,15 +37,15 @@ class AIProvider:
                 OLLAMA_CHAT,
                 OLLAMA_VISUAL_CHAT,
                 OLLAMA_EMBEDDINGS_MODEL,
+                OLLAMA_BASE_URL,
             )
             from langchain_community.chat_models import ChatOllama
             from langchain_community.embeddings import OllamaEmbeddings
-
             self.EMBEDDINGS_MODEL = OLLAMA_EMBEDDINGS_MODEL
 
-            self.model = ChatOllama(model=OLLAMA_CHAT)
-            self.vmodel = ChatOllama(model=OLLAMA_VISUAL_CHAT)
-            self.embeddings = OllamaEmbeddings(model=OLLAMA_EMBEDDINGS_MODEL)
+            self.model = ChatOllama(model=OLLAMA_CHAT, base_url=OLLAMA_BASE_URL)
+            self.vmodel = ChatOllama(model=OLLAMA_VISUAL_CHAT, base_url=OLLAMA_BASE_URL)
+            self.embeddings = OllamaEmbeddings(model=OLLAMA_EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL)
 
         elif self.provider_name == "fireworks":
             from config import (
@@ -169,7 +169,7 @@ class AIChat:
         )
         splits = text_splitter.split_text(text)
         print("Creating vectorstore")
-        self.vectorstore = Chroma.from_texts(splits, self.provider.embeddings)
+        self.vectorstore = Chroma.from_texts(splits, self.provider.embeddings, persist_directory="./chroma_db" )
 
 
 ai_provider = AIProvider(PROVIDER)
