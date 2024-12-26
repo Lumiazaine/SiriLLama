@@ -47,23 +47,6 @@ class AIProvider:
             self.vmodel = ChatOllama(model=OLLAMA_VISUAL_CHAT, base_url=OLLAMA_BASE_URL)
             self.embeddings = OllamaEmbeddings(model=OLLAMA_EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL)
 
-        elif self.provider_name == "fireworks":
-            from config import (
-                FIREWORKS_CHAT,
-                FIREWORKS_VISUAL_CHAT,
-                FIREWORKS_API_KEY,
-                FIREWORKS_EMBEDDINGS_MODEL,
-            )
-            from langchain_fireworks import ChatFireworks, FireworksEmbeddings
-
-            self.model = ChatFireworks(model=FIREWORKS_CHAT, api_key=FIREWORKS_API_KEY)
-            self.vmodel = ChatFireworks(
-                model=FIREWORKS_VISUAL_CHAT, api_key=FIREWORKS_API_KEY
-            )
-            self.embeddings = FireworksEmbeddings(
-                model=FIREWORKS_EMBEDDINGS_MODEL, fireworks_api_key=FIREWORKS_API_KEY
-            )
-        else:
             raise ValueError("Invalid provider")
 
 
@@ -121,13 +104,13 @@ class AIChat:
             }
         text_part = {
             "type": "text",
-            "text": "What is this image? Give a detailed description of it. Don't leave any detail out. You will be asked about it.",
+            "text": "¿Qué es esta imagen? Da una descripción detallada del mismo. No omitas ningún detalle. Se te preguntará al respecto. Responde SIEMPRE en español. No uses inglés ni otro idioma a menos que sea estrictamente necesario.",
         }
         return [HumanMessage(content=[image_part]), HumanMessage(content=[text_part])]
 
     def generate(self, user_input, max_tokens=None):
         if not user_input:
-            return "End of conversation"
+            return "Fin de la conversación"
         inputs = {"input": user_input}
 
         if self.vectorstore:
@@ -150,13 +133,13 @@ class AIChat:
     def process_image(self, image):
         self.create_chain(is_visual=True)
         response = self.initial_chain.invoke({"img": image})
-        self.memory.save_context({"input": "Describe the image"}, {"output": response})
+        self.memory.save_context({"input": "Describe la imagen"}, {"output": response})
         return response
 
     def process_url(self, url):
         text = self.extract_text_from_url(url)
         self.create_vectorstore(text)
-        return f"Processed URL: {url}. Ready for questions about its content."
+        return f"Processed URL: {url}. Prepárate para recibir preguntas sobre el contenido."
 
     def extract_text_from_url(self, url):
         response = requests.get(url)

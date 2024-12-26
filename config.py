@@ -16,17 +16,9 @@ No uses inglés ni otro idioma a menos que sea estrictamente necesario.
 Has visto una imagen y describes su contenido en castellano.
 """
 
-PROVIDER = "ollama"  # or "fireworks"
-# Models
-# Ollama
+PROVIDER = "ollama" 
 
 OLLAMA_CHAT = "gemma2:latest"
 OLLAMA_VISUAL_CHAT = "llava:latest"
 OLLAMA_EMBEDDINGS_MODEL = "0ssamaak0/nomic-embed-text:latest"
 OLLAMA_BASE_URL = "http://host.docker.internal:11434"
-
-# Fireworks
-FIREWORKS_CHAT = "accounts/fireworks/models/llama-v3p1-8b-instruct"
-FIREWORKS_VISUAL_CHAT = "accounts/fireworks/models/phi-3-vision-128k-instruct"
-FIREWORKS_API_KEY = "<API_KEY>"
-FIREWORKS_EMBEDDINGS_MODEL = "nomic-ai/nomic-embed-text-v1.5"
