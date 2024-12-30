@@ -46,9 +46,8 @@ class AIProvider:
             self.model = ChatOllama(model=OLLAMA_CHAT, base_url=OLLAMA_BASE_URL)
             self.vmodel = ChatOllama(model=OLLAMA_VISUAL_CHAT, base_url=OLLAMA_BASE_URL)
             self.embeddings = OllamaEmbeddings(model=OLLAMA_EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL)
-
+        else:
             raise ValueError("Invalid provider")
-
 
 class AIChat:
     def __init__(self, provider):
@@ -139,7 +138,7 @@ class AIChat:
     def process_url(self, url):
         text = self.extract_text_from_url(url)
         self.create_vectorstore(text)
-        return f"Processed URL: {url}. Prepárate para recibir preguntas sobre el contenido."
+        return f"En base la siguiente URL:{url}.Asegúrate de responder SIEMPRE en español y no uses inglés u otros idiomas. Incluye los puntos más relevantes y significativos que aparezcan en el texto, organizando la información de manera clara y concisa. No inventes datos que no estén presentes en la fuente original ni alteres el sentido de lo expuesto. Si consideras necesario, divide tu resumen en secciones para ofrecer una mejor comprensión."
 
     def extract_text_from_url(self, url):
         response = requests.get(url)
@@ -157,7 +156,6 @@ class AIChat:
 
 ai_provider = AIProvider(PROVIDER)
 ai_chat = AIChat(ai_provider)
-
 
 @app.route("/", methods=["POST"])
 def generate_route():
@@ -179,7 +177,6 @@ def generate_route():
         response = ai_chat.generate(prompt, max_tokens=MAX_TOKENS)
 
     return Response(response, content_type="text/plain; charset=utf-8")
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001)

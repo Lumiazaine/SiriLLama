@@ -10,82 +10,79 @@ Siri LLama
 </h3>
 </div>
 
-Siri LLama is apple shortcut that access locally running LLMs through Siri or the shortcut UI on any apple device connected to the same network of your host machine. It uses Langchain 🦜🔗 and supports open source models from both [Ollama](https://ollama.com/) 🦙 or [Fireworks AI](https://fireworks.ai/) 🎆
+Siri LLama es un atajo (shortcut) de Apple que permite acceder a modelos LLMs que se ejecutan localmente, ya sea a través de Siri o de la interfaz del atajo, en cualquier dispositivo Apple conectado a la misma red del servidor. Utiliza Langchain 🦜🔗 y es compatible con modelos de código abierto tanto de [Ollama](https://ollama.com/) 🦙 u otros.
 
-# Descarga el atajo aquí [Atajo](https://www.icloud.com/shortcuts/fd032a4e75cc4d81a6f9a742053d4c18)
+# Descarga el [Shortcut](https://www.icloud.com/shortcuts/fd032a4e75cc4d81a6f9a742053d4c18)
 
-# Getting Started
-## Requirements
+# Comienzo
+## Requisitos
+
+1. Descargar [Git](https://git-scm.com/downloads/), puedes descargar el ejecutable o hacerlo por la terminal.
+
 
 ```bash
-pip install -r requirements.txt
+winget install --id=Git.Git  -e
 ```
 
-### Ollama Installation🦙
-1. Install [Ollama](https://ollama.com/) for your machine, you have to run `ollama serve` in the terminal to start the server
+2. Una vez descargado Git, descargamos el repositorio y nos dirigimos a él.
 
-2. pull the models you want to use, for example
 ```bash
-ollama run llama3 # chat model
-ollama run llava # multimodal
+git clone https://github.com/Lumiazaine/SiriLLama.git #Descarga el repositorio de github
+cd SiriLLama #Nos dirigimos a la ruta
 ```
 
-3. in `config.py` set `OLLAMA_CHAT`, `OLLAMA_VISUAL_CHAT`, and `OLLAMA_EMBEDDINGS_MODEL` to the models you pulled from Ollama
-### Docker installation  🐳 
+### Instalación de Ollama🦙
+1. Instalar [Ollama](https://ollama.com/) en el servidor.
 
-1. get your [Fireworks API Key](http://fireworks.ai/) and put it in `fireworks_models.py`
-
-2. in `config.py` set `FIREWORKS_CHAT`, `FIREWORKS_VISUAL_CHAT` and `FIREWORKS_EMBEDDINGS_MODEL` to the models you want to use from Fireworks AI. and set your and `FIREWORKS_API_KEY` 
-
-## Config
-in `confing.py` set `MEMORY_SIZE` (How many previous messages to remember) and `ANSWER_SIZE_WORDS` (How many words to generate in the answer)
-
-## Running SiriLlama 🟣🦙
-
-1. [Download](https://github.com/0ssamaak0/SiriLLama/archive/refs/heads/main.zip) or clone the repo 
-
-2. [set the provider (Ollama / Fireworks)](https://github.com/0ssamaak0/SiriLLama/blob/d07ff97a0eb07db08601e5e3fe0254c6f05aee50/app.py#L18) in `app.py` 
-
-3. Run the flask app using
+2. Descarga los modelos que quieras usar, en este caso
 ```bash
->>> python3 app.py
+ollama run gemma2 # LLM principal para tareas
+ollama run llava # Para tareas como reconocimiento de imágenes
+ollama pull nextfire/paraphrase-multilingual-minilm # modelo de Embedding
 ```
 
-4. On your Apple device, Download the shortcut from [here](https://www.icloud.com/shortcuts/fd032a4e75cc4d81a6f9a742053d4c18)
-   Note that you must run the shortcut through Siri to "talk" to it, otherwise it will prompt you to type text.
+3. En `config.py` establece `OLLAMA_CHAT`, `OLLAMA_VISUAL_CHAT`, y `OLLAMA_EMBEDDINGS_MODEL` Los modelos que has descargado en ollama y quieres utilizar.
 
-5. Run the shortcut through Siri or the shortcut UI, in first time you run the shortcut you will be asked to enter your [IP address](https://stackoverflow.com/a/15864222) and the port number showing in terminal
+### Instalación y despliegue con Docker.  🐳 
+
+1. Instalar [Docker](https://www.docker.com/products/docker-desktop/) en el servidor.
+
+2. Desde la carpeta Sirillama ejecutamos los siguientes comentos
+
 ```bash
->>> python app.py
-...
+docker build -t sirillama .
+docker run -d --name sirillamabeta --restart always -p 5001:5001 sirillama
+```
+
+Desde el log debería aparecerte algo similar
+
+```bash
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
  * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5001
  * Running on http://192.168.1.134:5001
 Press CTRL+C to quit
 ```
-In the example above, the IP address is `192.168.1.134` and the port is `5001` (default port is specified by Flask, change the line in main.py if needed)
+## Ajustes
+En `confing.py` establece `MEMORY_SIZE` (Los mensajes anteriores a recordar) and `ANSWER_SIZE_WORDS` (Cuantas palabras quiere que contenga la respuesta)
 
-6. If you are using Siri to interact with the shortcut, saying "Good Bye" will stop Siri.
+## Ejecutando SiriLlama en tu dispositivo Apple 🟣🦙
+
+4. En tu dispositivo Apple, descarga el siguiente atajo [aquí](https://www.icloud.com/shortcuts/fd032a4e75cc4d81a6f9a742053d4c18).
+Ten en cuenta que, para “hablar” con él, debes ejecutar el atajo a través de Siri; de lo contrario, se te solicitará que escribas el texto.
+
+5. Ejecuta el atajo a través de Siri o de la interfaz del propio atajo. La primera vez que lo ejecutes, se te pedirá que introduzcas tu [dirección IP](https://stackoverflow.com/a/15864222) y el número de puerto que aparece en la terminal.
+
+En el ejemplo anterior, la dirección IP es `192.168.1.134` y el puerto es `5001` (Es el puerto predeterminado, puedes cambiarlo si fuera necesario desde main.py).
+
+6. Si estás usando Siri para interactuar con el atajo, decir “Adiós” detendrá a Siri.
 
 
+# Otros modelos LLM 🤖🤖
+Supuestamente, SiriLLama debería funcionar con cualquier LLM, incluidos OpenAI, Claude, etc. Pero asegúrate primero de haber instalado los paquetes correspondientes de Langchain y de configurar los modelos en... `config.py`
 
-# Common Issues 🐞
-- Even we access the flask app (not Ollama server directly), Some windows users who have Ollama installed using `WSL` have to make sure **ollama servere** is exposed to the network, [Check this issue for more details](https://github.com/ollama/ollama/issues/1431)
-- When running the shortcut for the first time from Siri, it should ask for permission to send data to the Flask server.
-  If it doesn't work (especially on iOS 17.4), first try running the shortcut + sending a message from the iOS Shortcuts app to trigger the permissions dialog, then try running it through Siri again.
+# SiriLLama en redes públicas. 🌎
+- Es posible ejecutar Siri ollama sin estar en la red local a través de VPN como [Wireguard](https://www.wireguard.com/) o similares.
 
-# Other LLM Providers 🤖🤖
-Supposedly SiriLLama should work with any LLMs that including OpenAI, Claude, etc. but make sure first you installed the corresponding Langchain packages and set the models in `config.py`
-
-# SiriLLama on public network 🌎
-- Running SiriLLama outside your local network is possible with a tool called ngrok. It's going to expose one or multiple ports on your local machine. Step by step tutorial:
-  1. Start the ngrok server from cmd/terminal with the following command:
-```bash
-ngrok http localhost:5001
-```
-  2. It will give you a https link, something like https://xyzz-xxx-xxx-xxx-xxx.ngrok-free.app
-  3. In the shortcut you downloaded earlier insert the link from ngrok without https:// and leave the port number field empty
-  4. Now you should be able to run SiriLLama outside from your network. (In case you are unable to get valid response or something went wrong, try paste the ngrok link into safari and allow the connection within the browser)
-
-# Good to know 💡💡
-- Using the multimodel feature is only possible with images that arent in HEIF format. You can change this in your camera settings (it wont affect your existing photos) under formats choose most compatible and you are good to go.
+# Tips 💡💡
+- Para usar la función multimodal, solo es posible con imágenes que no estén en formato HEIF. Puedes cambiar esto en la configuración de tu cámara (no afectará a tus fotos existentes). En la sección de formatos, elige “Más compatible” ¡y listo!
