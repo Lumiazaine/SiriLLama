@@ -19,6 +19,6 @@ Has visto una imagen y describes su contenido en castellano.
 PROVIDER = "ollama" 
 
 OLLAMA_CHAT = "gemma3:latest"
-OLLAMA_VISUAL_CHAT = "gemma3:latest"
+OLLAMA_VISUAL_CHAT = "moondream:latest"
 OLLAMA_EMBEDDINGS_MODEL = "nextfire/paraphrase-multilingual-minilm:latest"
 OLLAMA_BASE_URL = "http://host.docker.internal:11434"
